@@ -57,6 +57,46 @@ categories'].split(";")[0]
     plt.title("Rating of Each Category")
     plt.savefig('result/AZ.png')
 
+    sns.catplot(x="state", y="mean", hue="categories", data=state_EDH, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/EDH.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_ELN, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/ELN.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_FIF, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/FIF.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_GA, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/GA.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_KHL, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/KHL.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_MLN, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/MLN.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_NV, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/NV.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_ON, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/ON.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_WI, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/WI.png')
+
+    sns.catplot(x="state", y="mean", hue="categories", data=state_XGL, legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category")
+    plt.savefig('result/XGL.png')
+
 
 
 def Find_Avg_Ratings_Per_Cat(data):
