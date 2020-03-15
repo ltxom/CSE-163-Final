@@ -1,10 +1,9 @@
 """
 Author: Tom Liu, Kellie Gui, Timothy Woo
-Please manually download data from
+Data from
 1. https://www.kaggle.com/z5025122/yelp-csv#yelp_academic_dataset_business.csv
 2. https://www.kaggle.com/z5025122/yelp-csv#yelp_academic_dataset_review.csv
 3. https://www.arcgis.com/home/item.html?id=f7f805eb65eb4ab787a0a3e1116ca7e5
-And put them into data folder
 """
 import cse163_utils
 import pandas as pd
@@ -14,19 +13,6 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error
-
-
-def minify_review_data():
-    """
-    This function should be run for once to
-    remove the resturants comments from yelp_academic_dataset_review.csv
-    to make the program faster.
-    Saves the new file as yelp_academic_dataset_review_no_comments.csv
-    """
-    df = pd.read_csv("CSE-163-Final/data/yelp_academic_dataset_review.csv")
-    df = df.drop(columns=["text"])
-    df.to_csv("CSE-163-Final/data/\
-yelp_academic_dataset_review_no_comments.csv", index=False, header=True)
 
 
 def filter_music_columns(df):
@@ -75,8 +61,8 @@ def fit_predict_plot_music_factors(df):
     data = pd.DataFrame(data=temp).append(pd.DataFrame(data=temp2))
     plot = sns.catplot(x="name", y="result", hue="Have\
 ", data=data, legend=True, kind="bar", height=10)
-    plt.title("Musical Factors to Restaruants Stars Prediction")
-    plt.xlabel("Attributes in a restarant")
+    plt.title("Musical Factors to Restaurants Stars Prediction")
+    plt.xlabel("Attributes in a restaurant")
     plt.xticks(rotation=7)
     plt.ylabel("Predicted Stars (1.0-5.0)")
     plt.ylim((0, 5.5))
@@ -89,13 +75,10 @@ def fit_predict_plot_music_factors(df):
 
 
 def main():
-    # minify_review_data() # UNCOMMENT THIS LINE FIRST TIME RUNNING
     business_data = pd.read_csv("CSE-163-Final/data/\
 yelp_academic_dataset_business.csv")
-    # review_data_mini = pd.read_csv("CSE-163-Final/data/\
-    # yelp_academic_dataset_review_no_comments.csv")
-    # df = business_data.merge(review_data_mini, how="outer\
-    # ", left_on="business_id", right_on="business_id")
+    business_data = business_data.dropna(subset=["categories"], how="all")
+    business_data = business_data[business_data['categories'].str.contains('Restaurants')]
     music_df = filter_music_columns(business_data)
     fit_predict_plot_music_factors(music_df)
 
