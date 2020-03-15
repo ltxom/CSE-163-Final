@@ -1,15 +1,8 @@
+import cse163_utils
 import pandas as pd
 import geopandas as gpd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-
-def main():
-    sns.set()
-    geodata = gpd.read_file('states.shp')
-    data = pd.read_csv('yelp_academic_dataset_business.csv')
-    Question3(data, geodata)
-
 
 """
 def Question1(data):
@@ -56,74 +49,41 @@ def learn(data, stars):
 
 
 def Question3(data, geodata):
-    data = data[:, ['state', 'stars', 'categories']]
-    data = data['Restuarants' in data['categories']]
+    data = data.loc[:, ['state', 'stars', 'categories']]
+    data = data.dropna(subset=["categories"], how="all")
+    data = data[data['categories'].str.contains('Restaurants')]
+    data = data[(data['categories'].str.contains(';'))]
+    for row in data.itertuples():
+        data.at[row.Index, 'categories'] = data.at[row.Index, 'categories'].split(";")[0]
     # Creating separate datasets for each state
-    Alabama = data[(data['state'] == 'AL')]
-    Alaska = data[(data['state'] == 'AK')]
-    Arizona = data[(data['state'] == 'AZ')]
-    Arkansas = data[(data['state'] == 'AR')]
-    California = data[(data['state'] == 'CA')]
-    Colorodo = data[(data['state'] == 'CO')]
-    Connecticut = data[(data['state'] == 'CT')]
-    Delaware = data[(data['state'] == 'DE')]
-    Florida = data[(data['state'] == 'FL')]
-    Georgia = data[(data['state'] == 'GA')]
-    Hawaii = data[(data['state'] == 'HI')]
-    Idaho = data[(data['state'] == 'ID')]
-    Illinois = data[(data['state'] == 'IL')]
-    Indiana = data[(data['state'] == 'IN')]
-    Iowa = data[(data['state'] == 'IA')]
-    Kansas = data[(data['state'] == 'KS')]
-    Kentucky = data[(data['state'] == 'KY')]
-    Louisiana = data[(data['state'] == 'LA')]
-    Maine = data[(data['state'] == 'ME')]
-    Maryland = data[(data['state'] == 'MD')]
-    Massachusetts = data[(data['state'] == 'MA')]
-    Michigan = data[(data['state'] == 'MI')]
-    Minnesota = data[(data['state'] == 'MN')]
-    Mississippi = data[(data['state'] == 'MS')]
-    Missouri = data[(data['state'] == 'MO')]
-    Montana = data[(data['state'] == 'MT')]
-    Nebraska = data[(data['state'] == 'NE')]
-    Nevada = data[(data['state'] == 'NV')]
-    NewHampshire = data[(data['state'] == 'NH')]
-    NewJersey = data[(data['state'] == 'NJ')]
-    NewMexico = data[(data['state'] == 'NM')]
-    NewYork = data[(data['state'] == 'NY')]
-    NorthCarolina = data[(data['state'] == 'NC')]
-    NorthDakota = data[(data['state'] == 'ND')]
-    Ohio = data[(data['state'] == 'OH')]
-    Oklahoma = data[(data['state'] == 'OK')]
-    Oregon = data[(data['state'] == 'OR')]
-    Pennsylvania = data[(data['state'] == 'PA')]
-    RhodeIsland = data[(data['state'] == 'RI')]
-    SouthCarolina = data[(data['state'] == 'SC')]
-    SouthDakota = data[(data['state'] == 'SD')]
-    Tennessee = data[(data['state'] == 'TN')]
-    Texas = data[(data['state'] == 'TX')]
-    Utah = data[(data['state'] == 'UT')]
-    Vermont = data[(data['state'] == 'VT')]
-    Virginia = data[(data['state'] == 'VA')]
-    Washington = data[(data['state'] == 'WA')]
-    WestVirginia = data[(data['state'] == 'WV')]
-    Wisconsin = data[(data['state'] == 'WI')]
-    Wyoming = data[(data['state'] == 'WY')]
+    new_df = data.groupby(['state', 'categories'])['stars'].agg(['mean'])
+    states_cate_star_count = data.groupby(['state', 'categories'])['stars'].agg(['count'])
+    new_df['count'] = states_cate_star_count['count']
+
     # Planning to create a column using these datasets and putting them into
     # find avg ratings per category.
-    avgStateRatings = data.groupby('state')['stars'].mean()
-    merged = geodata.merge(avgStateRatings, left_on='STATE_ABBR',
-                           right_on='state')
+
+    # avgStateRatings = data.groupby('state')['stars'].mean()
+    merged = geodata.merge(new_df, left_on='STATE_ABBR', right_on='state')
+    print(merged)
     fig, ax = plt.subplots(1)
     geodata.plot(ax=ax, color='#AAAAAA')
-    merged.plot(column='stars', legend=True, ax=ax)
+    merged.plot(column='mean', legend=True, ax=ax)
     plt.savefig('temp.png')
+
 
 
 def Find_Avg_Ratings_Per_Cat(data):
     data['types'] = data['categories'].str.split(';')
     series = data.groupby('types')['stars'].mean()
     return series.max()
+
+
+def main():
+    sns.set()
+    geodata = gpd.read_file('CSE-163-Final/data/states/states.shp')
+    data = pd.read_csv('CSE-163-Final/data/yelp_academic_dataset_business.csv')
+    Question3(data, geodata)
 
 
 if __name__ == '__main__':
