@@ -69,7 +69,7 @@ Accepts Credit Cards"]).lower()}
         i += 1
         temp[i] = {"attribute": "attributes.Good for Kids", 'star\
 ': df_dict[k]["stars"], "condition": str(df_dict[k]["attributes.Good for\
-Kids"]).lower() if str(df_dict[k]["attributes.Good for Kids"]) == "False\
+ Kids"]).lower() if str(df_dict[k]["attributes.Good for Kids"]) == "False\
 " else "true"}
         i += 1
         temp[i] = {"attribute": "attributes.Attire", 'star\
@@ -77,7 +77,7 @@ Kids"]).lower() if str(df_dict[k]["attributes.Good for Kids"]) == "False\
         i += 1
         temp[i] = {"attribute": "attributes.Good For Groups", 'star\
 ': df_dict[k]["stars"], "condition": str((df_dict[k]["attributes.Good For\
-Groups"])).lower() if str(df_dict[k]["attributes.Good For Groups"]) == "\
+ Groups"])).lower() if str(df_dict[k]["attributes.Good For Groups"]) == "\
 False" else "true"}
         i += 1
     temp = pd.DataFrame.from_dict(temp, 'index')
