@@ -62,7 +62,11 @@ def fit_predict_plot_music_factors(df):
     plot = sns.catplot(x="name", y="result", hue="Have\
 ", data=data, legend=True, kind="bar", height=10)
     plt.title("Musical Factors to Restaurants Stars Prediction")
+<<<<<<< HEAD
     plt.xlabel("Attributes in a restaurant")
+=======
+    plt.xlabel("Attributes in a Restaurants")
+>>>>>>> 02427b2345a73ed5c17b081dd7104c95530a2899
     plt.xticks(rotation=7)
     plt.ylabel("Predicted Stars (1.0-5.0)")
     plt.ylim((0, 5.5))
@@ -70,17 +74,43 @@ def fit_predict_plot_music_factors(df):
 " + str(mean_squared_error(y_test, m.predict(X_test)))[0:5], style='italic\
 ', bbox={'facecolor': 'yellow', 'alpha': 0.5, 'pad': 10})
     plt.figure(figsize=(10, 10))
-    plot.savefig('CSE-163-Final/result/music_prediction.png',
+    plot.savefig('result\music_prediction.png',
                  bbox_inches='tight', dpi=188)
 
 
+def combine_df():
+    '''
+    This function takes the no comment version review
+    and merge them together for question 2
+    '''
+    review = pd.read_csv("data\yelp_academic_dataset_review_no_comments.csv")
+    business = pd.read_csv("data\yelp_academic_dataset_business.csv")
+    joined_data = business.merge(review, left_on='business_id',
+                    right_on='business_id', how='outer')
+    # joined_data = joined_data.dropna()
+    rest = joined_data['Restaurants' in joined_data.categories.str]
+    print(rest.head())
+
+
 def main():
+<<<<<<< HEAD
     business_data = pd.read_csv("CSE-163-Final/data/\
 yelp_academic_dataset_business.csv")
     business_data = business_data.dropna(subset=["categories"], how="all")
     business_data = business_data[business_data['categories'].str.contains('Restaurants')]
     music_df = filter_music_columns(business_data)
     fit_predict_plot_music_factors(music_df)
+=======
+    # minify_review_data() # UNCOMMENT THIS LINE FIRST TIME RUNNING
+    # business_data = pd.read_csv("data\yelp_academic_dataset_business.csv")
+    # review_data_mini = pd.read_csv("CSE-163-Final/data/\
+    # yelp_academic_dataset_review_no_comments.csv")
+    # df = business_data.merge(review_data_mini, how="outer\
+    # ", left_on="business_id", right_on="business_id")
+    # music_df = filter_music_columns(business_data)
+    # fit_predict_plot_music_factors(music_df)
+    combine_df()
+>>>>>>> 02427b2345a73ed5c17b081dd7104c95530a2899
 
 
 if __name__ == '__main__':
