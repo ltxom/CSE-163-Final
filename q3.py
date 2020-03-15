@@ -1,8 +1,8 @@
-import cse163_utils # UNCOMMENT THIS LINE IF USING MAC
 import pandas as pd
 import geopandas as gpd
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 
 def Question3(data, geodata):
     data = data.loc[:, ['state', 'stars', 'categories']]
@@ -12,97 +12,54 @@ def Question3(data, geodata):
     for row in data.itertuples():
         data.at[row.Index, 'categories'] = data.at[row.Index, '\
 categories'].split(";")[0]
-    # Creating separate datasets for each state
+    # Mean dataframe which computes the average rating for each state
+    # (Excluding Georgia since there is only one review)
+    temp = data[data['state'] != 'GA']
+    mean_df = temp.groupby('state')['stars'].agg(['mean'])
+
+    # Dataframe grouping based on state and categories, creating a new column
+    # for the mean of each category and its ratings.
     new_df = data.groupby(['state', 'categories'])['stars'].agg(['mean'])
     states_cate_star_count = data.groupby(['state', 'categories\
 '])['stars'].agg(['count'])
     new_df['count'] = states_cate_star_count['count']
+    # Saving dataframe into a csv and re-reading to make state and categories
+    # as separate columns
     new_df.to_csv("new_df.csv", header=True, index=True)
     new_df = pd.read_csv("new_df.csv")
-    # Planning to create a column using these datasets and putting them into
-    # find avg ratings per category.
-
-    # avgStateRatings = data.groupby('state')['stars'].mean()
-    merged = geodata.merge(new_df, left_on='STATE_ABBR', right_on='state')
+    # Joining the geography of US with the mean dataframe which includes the
+    # average ratings of each state.
+    merged = geodata.merge(mean_df, left_on='STATE_ABBR', right_on='state')
+    # Plotting the merged dataframe and blank US map on the same axis
     fig, ax = plt.subplots(1)
     geodata.plot(ax=ax, color='#AAAAAA', figsize=(10, 10))
     merged.plot(column='mean', legend=True, ax=ax)
-    plt.title('Average Rating')
+    plt.title('Average Rating By State')
+    plt.axis([-130, -65, 20, 55])
     plt.savefig('result/q3.png')
-
+    # Creating separate individual dataframes for each state.
+    # (Excluding Georgia since there is only one review)
     state_AZ = new_df[new_df["state"] == "AZ"]
     state_AZ = state_AZ.sort_values(by=['count']).head(10)
-    state_EDH = new_df[new_df["state"] == "EDH"]
-    state_EDH = state_EDH.sort_values(by=['count']).head(10)
-    state_ELN = new_df[new_df["state"] == "ELN"]
-    state_ELN = state_ELN.sort_values(by=['count']).head(10)
-    state_FIF = new_df[new_df["state"] == "FIF"]
-    state_FIF = state_FIF.sort_values(by=['count']).head(10)
-    state_GA = new_df[new_df["state"] == "GA"]
-    state_GA = state_GA.sort_values(by=['count']).head(10)
-    state_KHL = new_df[new_df["state"] == "KHL"]
-    state_KHL = state_KHL.sort_values(by=['count']).head(10)
-    state_MLN = new_df[new_df["state"] == "MLN"]
-    state_MLN = state_MLN.sort_values(by=['count']).head(10)
     state_NV = new_df[new_df["state"] == "NV"]
     state_NV = state_NV.sort_values(by=['count']).head(10)
-    state_ON = new_df[new_df["state"] == "ON"]
-    state_ON = state_ON.sort_values(by=['count']).head(10)
     state_WI = new_df[new_df["state"] == "WI"]
     state_WI = state_WI.sort_values(by=['count']).head(10)
-    state_XGL = new_df[new_df["state"] == "XGL"]
-    state_XGL = state_XGL.sort_values(by=['count']).head(10)
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_AZ, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
+    # Arizona Categories
+    sns.catplot(x="state", y="mean", hue="categories", data=state_AZ,
+                legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category in Arizona")
     plt.savefig('result/AZ.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_EDH, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/EDH.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_ELN, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/ELN.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_FIF, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/FIF.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_GA, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/GA.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_KHL, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/KHL.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_MLN, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/MLN.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_NV, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
+    # Nevada Categories
+    sns.catplot(x="state", y="mean", hue="categories", data=state_NV,
+                legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category in Nevada")
     plt.savefig('result/NV.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_ON, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/ON.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_WI, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
+    # Wisconsin Categories
+    sns.catplot(x="state", y="mean", hue="categories", data=state_WI,
+                legend=True, kind="bar", height=10)
+    plt.title("Rating of Each Category in Wisconsin")
     plt.savefig('result/WI.png')
-
-    sns.catplot(x="state", y="mean", hue="categories", data=state_XGL, legend=True, kind="bar", height=10)
-    plt.title("Rating of Each Category")
-    plt.savefig('result/XGL.png')
-
-
-
-def Find_Avg_Ratings_Per_Cat(data):
-    data['types'] = data['categories'].str.split(';')
-    series = data.groupby('types')['stars'].mean()
-    return series.max()
 
 
 def main():
