@@ -1,3 +1,11 @@
+"""
+Author: Tom Liu, Kellie Gui, Timothy Woo
+Data from
+1. https://www.kaggle.com/z5025122/yelp-csv#yelp_academic_dataset_business.csv
+2. https://www.kaggle.com/z5025122/yelp-csv#yelp_academic_dataset_review.csv
+3. https://www.arcgis.com/home/item.html?id=f7f805eb65eb4ab787a0a3e1116ca7e5
+"""
+# import cse163_utils # UNCOMMENT THIS LINE IF USING MAC
 import pandas as pd
 import geopandas as gpd
 import seaborn as sns
